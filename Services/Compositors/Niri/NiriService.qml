@@ -23,4 +23,8 @@ Singleton {
 		id: windowConsumer
 		listener: EventStreamListener
 	}
+
+	function activateWorkspace(workspaceIdx) {
+		Quickshell.execDetached(["niri", "msg", "action", "focus-workspace", workspaceIdx]);
+	}
 }

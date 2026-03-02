@@ -1,49 +1,56 @@
 import QtQuick
 import qs.Services.Compositors.Niri
+import qs.Components
 
 Item {
-	id: root
-	required property string outputName
+    id: root
+    required property string outputName
 
-	SortFilterProxyModel {
-		id: model
-		model: NiriService.workspaces
-		sorters: [
-			RoleSorter {
-				roleName: "idx"
-				sortOrder: Qt.AscendingOrder
-			}
-		]
-		filters: [
-			ValueFilter {
-				roleName: "output"
-				value: root.outputName
-			}
-		]
-	}
+    SortFilterProxyModel {
+        id: workspaceProxy
+        model: NiriService.workspaces
+        sorters: [
+            RoleSorter {
+                roleName: "idx"
+                sortOrder: Qt.AscendingOrder
+            }
+        ]
+        filters: [
+            ValueFilter {
+                roleName: "output"
+                value: root.outputName
+            }
+        ]
+    }
 
-	Row {
-		id: row
-		spacing: 10
-		anchors.verticalCenter: parent.verticalCenter
+    Rectangle {
+        id: container
+		property int padx: 10
+		anchors.left: parent.left
+		anchors.top: parent.top
+		anchors.bottom: parent.bottom
 
-		Repeater {
-			model: model
+        color: "#282828"
 
-			delegate: Rectangle {
-				width: 20
-				height: 20
+        implicitHeight: row.implicitHeight
+        implicitWidth: row.implicitWidth + 2 * padx
+        height: implicitHeight
+        width: implicitWidth
 
-				opacity: model.is_active ? 1 : 0.5
-				color: model.is_focused ? "blue" : (model.is_urgent ? "red" : "gray")
+		radius: height / 2
 
-				Text {
-					anchors.centerIn: parent
-					text: String(model.idx)
-					color: "white"
-					font.pixelSize: 12
-				}
-			}
-		}
-	}
+        Row {
+            id: row
+            spacing: 5
+            anchors.verticalCenter: parent.verticalCenter
+			anchors.horizontalCenter: parent.horizontalCenter
+
+            Repeater {
+                id: repeater
+                model: workspaceProxy
+
+                delegate: WorkspaceIndicator {}
+            }
+        }
+    }
 }

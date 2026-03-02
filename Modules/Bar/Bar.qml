@@ -17,6 +17,7 @@ Scope {
 
             // This is the key: QuickshellScreenInfo has name="HDMI-A-5" etc.
             property string outputName: modelData.name
+			color: "transparent"
 
             anchors {
                 top: true
@@ -26,16 +27,22 @@ Scope {
 
             implicitHeight: 30
 
-            // Clock (center)
             ClockWidget {
-                anchors.centerIn: parent
+				anchors.right: parent.right
+				anchors.top: parent.top
+				anchors.bottom: parent.bottom
+				anchors.rightMargin: 10
+				anchors.leftMargin: 5
+				anchors.topMargin: 5
             }
 
 			WorkspaceWidget {
 				outputName: panel.outputName
 				anchors.left: parent.left
-				anchors.verticalCenter: parent.verticalCenter
-				anchors.leftMargin: 10
+				anchors.top: parent.top
+				anchors.bottom: parent.bottom
+				anchors.leftMargin: 5
+				anchors.topMargin: 5
 			}
         }
     }
