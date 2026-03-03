@@ -7,6 +7,8 @@ Item {
     property ListModel workspaces: ListModel {}
     property var _idToIdx: ({})
 
+	signal workspacesUpdated
+
 	function getWorkspaceIndex(workspaceId) {
 		const idx = _idToIdx[workspaceId];
 		return idx !== undefined ? idx : -1;
@@ -108,7 +110,10 @@ Item {
 			case "WorkspaceActiveWindowChanged":
 				root.handleWorkspaceActiveWindowChanged(event);
 				break;
+			default: 
+				return;
 		}
+		workspacesUpdated()
 	}
 
     Connections {

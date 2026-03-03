@@ -7,34 +7,51 @@ import qs.Services.Compositors.Niri.Consumers
 
 Singleton {
     id: root
-	property alias workspaces: workspaceConsumer.workspaces
-	property alias windows: windowConsumer.windows
-	property alias keyboardLayouts: keyboardConsumer.layouts
+    property alias workspaces: workspaceConsumer.workspaces
+    property alias windows: windowConsumer.windows
+    property alias keyboardLayouts: keyboardConsumer.layouts
 
-	Component.onCompleted: {
-		EventStreamListener.init();
-	}
+    signal workspacesUpdated
+    signal windowsUpdated
 
-	WorkspaceConsumer {
-		id: workspaceConsumer
-		listener: EventStreamListener
-	}
+    Component.onCompleted: {
+        EventStreamListener.init();
+    }
 
-	WindowConsumer {
-		id: windowConsumer
-		listener: EventStreamListener
-	}
+    WorkspaceConsumer {
+        id: workspaceConsumer
+        listener: EventStreamListener
+    }
 
-	KeyboardConsumer {
-		id: keyboardConsumer
-		listener: EventStreamListener
-	}
+    WindowConsumer {
+        id: windowConsumer
+        listener: EventStreamListener
+    }
 
-	function activateWorkspace(workspaceIdx) {
-		Quickshell.execDetached(["niri", "msg", "action", "focus-workspace", workspaceIdx]);
-	}
+    KeyboardConsumer {
+        id: keyboardConsumer
+        listener: EventStreamListener
+    }
 
-	function cycleKeyboardLayouts() {
-		Quickshell.execDetached(["niri", "msg", "action", "switch-layout", "next"]);
-	}
+    Connections {
+        target: windowConsumer
+        function onWindowsUpdated() {
+            root.windowsUpdated();
+        }
+    }
+
+    Connections {
+        target: workspaceConsumer
+        function onWorkspacesUpdated() {
+            root.workspacesUpdated();
+        }
+    }
+
+    function activateWorkspace(workspaceIdx) {
+        Quickshell.execDetached(["niri", "msg", "action", "focus-workspace", workspaceIdx]);
+    }
+
+    function cycleKeyboardLayouts() {
+        Quickshell.execDetached(["niri", "msg", "action", "switch-layout", "next"]);
+    }
 }

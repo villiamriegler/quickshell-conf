@@ -7,6 +7,8 @@ Item {
     property ListModel windows: ListModel {}
     property var _idToIdx: ({})
 
+	signal windowsUpdated
+
     function getWindowIndex(windowId) {
         const idx = _idToIdx[windowId];
         return idx !== undefined ? idx : -1;
@@ -182,7 +184,10 @@ Item {
         case "WindowLayoutsChanged":
             root.handleWindowLayoutsChanged(event);
             break;
+		default:
+			return;
         }
+		windowsUpdated();
     }
 
     Connections {
