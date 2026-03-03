@@ -22,6 +22,8 @@ Item {
             }
         ]
     }
+	implicitWidth: container.implicitWidth
+	implicitHeight: parent.height
 
     Rectangle {
         id: container
