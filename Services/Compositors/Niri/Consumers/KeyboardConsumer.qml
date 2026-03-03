@@ -12,7 +12,6 @@ Item {
 	}
 
 	function handleKeyboardLayoutsChanged(event) {
-		console.log("Keyboard layouts changed:", JSON.stringify(event.payload));
 		const keyboard_layouts = event.payload.keyboard_layouts;
 		const names = keyboard_layouts.names;
 		const current = keyboard_layouts.current_idx;

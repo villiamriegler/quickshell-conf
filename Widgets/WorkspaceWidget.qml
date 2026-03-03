@@ -1,45 +1,15 @@
 import QtQuick
-import qs.Services.Compositors.Niri
 import qs.Components
 
 Item {
     id: root
-    required property string outputName
+    required property var workspaceModel
 
-    SortFilterProxyModel {
-        id: workspaceProxy
-        model: NiriService.workspaces
-        sorters: [
-            RoleSorter {
-                roleName: "idx"
-                sortOrder: Qt.AscendingOrder
-            }
-        ]
-        filters: [
-            ValueFilter {
-                roleName: "output"
-                value: root.outputName
-            }
-        ]
-    }
 	implicitWidth: container.implicitWidth
 	implicitHeight: parent.height
 
-    Rectangle {
-        id: container
-		property int padx: 10
-		anchors.left: parent.left
-		anchors.top: parent.top
-		anchors.bottom: parent.bottom
-
-        color: "#282828"
-
-        implicitHeight: row.implicitHeight
-        implicitWidth: row.implicitWidth + 2 * padx
-        height: implicitHeight
-        width: implicitWidth
-
-		radius: height / 2
+    BarWidgetContainer {
+		id: container
 
         Row {
             id: row
@@ -49,7 +19,7 @@ Item {
 
             Repeater {
                 id: repeater
-                model: workspaceProxy
+                model: root.workspaceModel
 
                 delegate: WorkspaceIndicator {}
             }

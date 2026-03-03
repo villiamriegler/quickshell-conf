@@ -1,18 +1,20 @@
 import QtQuick
 import qs.Services
+import qs.Components
 
-Rectangle {
+Item {
     id: root
-	property int padx: 10
-    color: "#282828"
-    implicitWidth: text.implicitWidth + 2 * padx
-    implicitHeight: text.implicitHeight
-	radius: height / 2
 
-    Text {
-        id: text
-		anchors.centerIn: parent
-		color: "#ebdbb2"
-        text: Time.time
+    implicitWidth: container.implicitWidth
+    implicitHeight: parent.height
+
+    BarWidgetContainer {
+		id: container
+        Text {
+            id: text
+            anchors.centerIn: parent
+            color: "#ebdbb2"
+            text: Time.time
+        }
     }
 }

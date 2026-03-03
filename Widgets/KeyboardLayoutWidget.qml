@@ -5,35 +5,12 @@ import qs.Components
 Item {
     id: root
 
-    SortFilterProxyModel {
-        id: layoutProxy
-        model: NiriService.keyboardLayouts
-        filters: [
-            ValueFilter {
-                roleName: "active"
-                value: true
-            }
-        ]
-    }
     implicitWidth: container.implicitWidth
     implicitHeight: parent.height
 
-    Rectangle {
-        id: container
-        property int padx: 10
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-
-        color: "#282828"
-
-        implicitHeight: row.implicitHeight
-        implicitWidth: row.implicitWidth + 2 * padx
-        height: implicitHeight
-        width: implicitWidth
-
-        radius: height / 2
-
+    BarWidgetContainer {
+		id: container
+		
         Row {
             id: row
             spacing: 5
@@ -42,24 +19,36 @@ Item {
 
             Repeater {
                 id: repeater
-                model: layoutProxy
+                model: NiriService.keyboardLayouts
 
-                delegate: Text {
+                Item {
+                    id: delagate
                     required property var modelData
-					property bool hovered: mouse.containsMouse
+                    property bool active: modelData.active
+                    property string name: modelData.name
+                    property bool hovered: mouse.containsMouse
 
-                    text: "   " + modelData.name
-                    color: "#ebdbb2"
-					opacity: hovered ? 0.75 : 1.0
+                    opacity: !active ? 0.0 : hovered ? 0.75 : 1.0
+                    visible: opacity > 0.0
+                    clip: true
 
-					MouseArea {
-						id: mouse
-						hoverEnabled: true
-						anchors.fill: parent
-						onClicked: {
-							NiriService.cycleKeyboardLayouts();
-						}
-					}
+                    width: active ? label.implicitWidth : 0.0
+                    height: label.implicitHeight
+
+                  Text {
+                        id: label
+                        text: "   " + parent.name
+                        color: "#ebdbb2"
+                    }
+
+                    MouseArea {
+                        id: mouse
+                        hoverEnabled: true
+                        anchors.fill: parent
+                        onClicked: {
+                            NiriService.cycleKeyboardLayouts();
+                        }
+                    }
                 }
             }
         }

@@ -15,12 +15,12 @@ Rectangle {
 
 	property bool hovered: mouse.containsMouse
 
-    width: is_focused ? 44 : 22
+    width: is_focused || is_active ? height * 4 : height
     height: 12
     radius: height / 2
 	
-	color: hovered ? "#5277C3" : is_focused ? "#7ebae4" : is_active ?  "#5277C3" : "#3c3836"
-    opacity: is_focused || hovered ? 1.0 : is_active ? 0.75 : 0.5
+	color: is_focused  || is_active ? "#7ebae4" : "#3c3836"
+    opacity: is_focused || hovered ? 1.0 :  0.5
 
 	MouseArea {
 		id: mouse
@@ -28,6 +28,27 @@ Rectangle {
 		anchors.fill: parent
 		onClicked: {
 			NiriService.activateWorkspace(root.idx.toString());
+		}
+	}
+
+	Behavior on width {
+		NumberAnimation {
+			duration: 200
+			easing.type: Easing.OutQuad
+		}
+	}
+
+	Behavior on color {
+		ColorAnimation {
+			duration: 200
+			easing.type: Easing.OutQuad
+		}
+	}
+
+	Behavior on opacity {
+		NumberAnimation {
+			duration: 200
+			easing.type: Easing.OutQuad
 		}
 	}
 }
