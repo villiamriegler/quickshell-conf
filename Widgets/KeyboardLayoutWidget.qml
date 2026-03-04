@@ -1,6 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
+import Quickshell.Widgets
 import qs.Services.Compositors.Niri
 import qs.Components
 
@@ -13,14 +15,14 @@ Item {
     property string layoutName: ""
     property bool hovered: mouse.containsMouse
     property bool showTemporarily: false
-	property bool faded: false
+    property bool faded: false
 
     property bool expanded: hovered || showTemporarily
 
-	function fade() {
-		faded = true;
-		tempFadeTimer.restart();
-	}
+    function fade() {
+        faded = true;
+        tempFadeTimer.restart();
+    }
 
     Timer {
         id: tempFadeTimer
@@ -70,7 +72,7 @@ Item {
         hoverEnabled: true
         onClicked: {
             NiriService.cycleKeyboardLayouts();
-			root.fade();
+            root.fade();
         }
     }
 
@@ -112,7 +114,7 @@ Item {
                         text: root.layoutName
                         color: "#ebdbb2"
 
-                        opacity: root.expanded ? (root.faded ? 0.50 : 1.0) : 0.0 
+                        opacity: root.expanded ? (root.faded ? 0.50 : 1.0) : 0.0
 
                         Behavior on opacity {
                             NumberAnimation {

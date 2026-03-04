@@ -38,6 +38,8 @@ ScreenPanel {
 
             ClockWidget {}
 
+            AudioWidget {}
+
             KeyboardLayoutWidget {}
         }
 
