@@ -12,17 +12,19 @@ ScreenPanel {
     anchorRight: true
 
     Item {
-		id: content
-		readonly property var screen: parent.screen
+        id: content
+        readonly property var screen: parent.screen
 
-		// Service for filtering workspaces by output and 
-		// index ordering
-		WorkspaceFilter {
-			id: workspaceFilter
-			screenName: content.screen.name
-		}
+        // Service for filtering workspaces by output and
+        // index ordering
+        WorkspaceFilter {
+            id: workspaceFilter
+            screenName: content.screen.name
+        }
 
-        ClockWidget {
+        Row {
+            spacing: 5
+
             anchors {
                 top: parent.top
                 bottom: parent.bottom
@@ -30,10 +32,17 @@ ScreenPanel {
                 rightMargin: 5
                 topMargin: 5
             }
+
+            height: implicitHeight
+            width: implicitWidth
+
+            ClockWidget {}
+
+            KeyboardLayoutWidget {}
         }
 
         Row {
-            spacing: 10
+            spacing: 5
 
             anchors {
                 top: parent.top
@@ -50,8 +59,6 @@ ScreenPanel {
                 id: workspaces
                 workspaceModel: workspaceFilter.model
             }
-
-            KeyboardLayoutWidget {}
         }
     }
 }

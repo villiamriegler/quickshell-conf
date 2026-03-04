@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import qs.Services.Compositors.Niri
 import qs.Components
@@ -8,45 +10,122 @@ Item {
     implicitWidth: container.implicitWidth
     implicitHeight: parent.height
 
-    BarWidgetContainer {
-		id: container
-		
-        Row {
-            id: row
-            spacing: 5
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
+    property string layoutName: ""
+    property bool hovered: mouse.containsMouse
+    property bool showTemporarily: false
+	property bool faded: false
 
-            Repeater {
-                id: repeater
-                model: NiriService.keyboardLayouts
+    property bool expanded: hovered || showTemporarily
+
+	function fade() {
+		faded = true;
+		tempFadeTimer.restart();
+	}
+
+    Timer {
+        id: tempFadeTimer
+        repeat: false
+        interval: 150
+        onTriggered: {
+            root.faded = false;
+        }
+    }
+
+    onLayoutNameChanged: {
+        showTemporarily = true;
+        tempShowTimer.restart();
+    }
+
+    Timer {
+        id: tempShowTimer
+        repeat: false
+        interval: 1000
+        onTriggered: {
+            root.showTemporarily = false;
+        }
+    }
+
+    Instantiator {
+        model: NiriService.keyboardLayouts
+
+        delegate: QtObject {
+            required property var modelData
+            property bool active: modelData.active
+            property string name: modelData.name
+
+            function maybeSet() {
+                if (active) {
+                    root.layoutName = String(name);
+                }
+            }
+
+            onActiveChanged: maybeSet()
+            Component.onCompleted: maybeSet()
+        }
+    }
+
+    MouseArea {
+        id: mouse
+        anchors.fill: parent
+        hoverEnabled: true
+        onClicked: {
+            NiriService.cycleKeyboardLayouts();
+			root.fade();
+        }
+    }
+
+    BarWidgetContainer {
+        id: container
+
+        width: implicitWidth
+        height: implicitHeight
+
+        Item {
+            id: delagate
+
+            anchors.centerIn: parent
+            width: label.implicitWidth
+            height: implicitHeight
+
+            Row {
+                id: label
+                spacing: 5
+                anchors.verticalCenter: parent.verticalCenter
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: ""
+                    color: "#ebdbb2"
+                }
 
                 Item {
-                    id: delagate
-                    required property var modelData
-                    property bool active: modelData.active
-                    property string name: modelData.name
-                    property bool hovered: mouse.containsMouse
+                    width: root.expanded ? nameNode.implicitWidth : 0.0
+                    height: nameNode.implicitHeight
 
-                    opacity: !active ? 0.0 : hovered ? 0.75 : 1.0
-                    visible: opacity > 0.0
+                    anchors.verticalCenter: parent.verticalCenter
                     clip: true
 
-                    width: active ? label.implicitWidth : 0.0
-                    height: label.implicitHeight
+                    visible: width > 0
 
-                  Text {
-                        id: label
-                        text: "   " + parent.name
+                    Text {
+                        id: nameNode
+                        text: root.layoutName
                         color: "#ebdbb2"
+
+                        opacity: root.expanded ? (root.faded ? 0.50 : 1.0) : 0.0 
+
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: 200
+                                easing.type: Easing.InOutQuad
+                            }
+                        }
                     }
 
-                    MouseArea {
-                        id: mouse
-                        hoverEnabled: true
-                        anchors.fill: parent
-                        onClicked: {
-                            NiriService.cycleKeyboardLayouts();
+                    Behavior on width {
+                        NumberAnimation {
+                            duration: 200
+                            easing.type: Easing.InOutQuad
                         }
                     }
                 }
