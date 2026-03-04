@@ -7,7 +7,7 @@ import Quickshell
 import QtQuick
 
 Singleton {
-  property string time: Qt.formatDateTime(clock.date, "hh:mm:ss")
+  property string time: Qt.formatDateTime(clock.date, "ddd d MMM - hh:mm:ss")
   
   SystemClock {
 	  id: clock
