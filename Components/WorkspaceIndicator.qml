@@ -16,12 +16,15 @@ Rectangle {
 	property bool hovered: mouse.containsMouse
 
 	property bool current: is_focused || is_active
+	property string activeColor: "#ebdbb2" // "#7ebae4" 
+	property string inActiveColor: "#504945" // "#3c3836" 
+	property string urgentColor: "#fb4934"
 
-    width: current ? height * 4 : height
+    width: current ? height * 4 : height * 2
     height: 12
     radius: height / 2
 	
-	color: is_urgent ? "#fb4934" : (current ? "#7ebae4" : "#3c3836")
+	color: is_urgent ? urgentColor : (current ? activeColor : inActiveColor)
     opacity: is_focused || hovered ? 1.0 :  0.5
 
 	MouseArea {
