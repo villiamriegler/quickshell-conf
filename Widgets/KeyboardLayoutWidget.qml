@@ -12,6 +12,8 @@ Item {
     implicitWidth: container.implicitWidth
     implicitHeight: parent.height
 
+    visible: NiriService.keyboardLayouts.count > 1
+
     property string layoutName: ""
     property bool hovered: mouse.containsMouse
     property bool showTemporarily: false
